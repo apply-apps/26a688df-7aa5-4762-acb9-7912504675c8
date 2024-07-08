@@ -1,6 +1,5 @@
 // Filename: index.js
 // Combined code from all files
-
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, Button, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
 
@@ -12,7 +11,7 @@ const mockData = [
     { id: '5', caseNumber: '005', status: 'Completed', description: 'Eye Exam', details: 'Details about Eye Exam' },
 ];
 
-const App = () => {
+export default function App() {
     const [caseData, setCaseData] = useState(mockData);
     const [selectedCase, setSelectedCase] = useState(null);
     const [addingCase, setAddingCase] = useState(false);
@@ -39,7 +38,7 @@ const App = () => {
             )}
         </SafeAreaView>
     );
-};
+}
 
 const CaseList = ({ caseData, onCaseSelect }) => {
     const renderItem = ({ item }) => (
@@ -94,27 +93,27 @@ const AddCaseForm = ({ onCancel, onSubmit }) => {
     return (
         <View style={styles.formContainer}>
             <Text style={styles.formTitle}>Add New Case</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Case Number"
+            <TextInput 
+                style={styles.input} 
+                placeholder="Case Number" 
                 value={caseNumber}
                 onChangeText={setCaseNumber}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Status"
+            <TextInput 
+                style={styles.input} 
+                placeholder="Status" 
                 value={status}
                 onChangeText={setStatus}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Description"
+            <TextInput 
+                style={styles.input} 
+                placeholder="Description" 
                 value={description}
                 onChangeText={setDescription}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Details"
+            <TextInput 
+                style={styles.input} 
+                placeholder="Details" 
                 value={details}
                 onChangeText={setDetails}
             />
@@ -140,6 +139,7 @@ const styles = StyleSheet.create({
     },
     list: {
         flexGrow: 1,
+        paddingHorizontal: 20,
     },
     caseContainer: {
         backgroundColor: '#FFFFFF',
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
         padding: 20,
+        marginHorizontal: 20,
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -200,6 +201,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
         padding: 20,
+        marginHorizontal: 20,
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -226,5 +228,3 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
 });
-
-export default App;
