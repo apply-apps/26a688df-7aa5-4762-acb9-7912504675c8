@@ -2,7 +2,7 @@
 // Combined code from all files
 
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, FlatList, TouchableOpacity, Button } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Button, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
 
 const mockData = [
     { id: '1', caseNumber: '001', status: 'In Progress', description: 'Routine Checkup', details: 'Details about Routine Checkup' },
@@ -13,21 +13,33 @@ const mockData = [
 ];
 
 const App = () => {
+    const [caseData, setCaseData] = useState(mockData);
     const [selectedCase, setSelectedCase] = useState(null);
+    const [addingCase, setAddingCase] = useState(false);
+
+    const addNewCase = (newCase) => {
+        setCaseData([...caseData, newCase]);
+        setAddingCase(false);
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            {!selectedCase ? (
+            {!selectedCase && !addingCase && (
                 <>
                     <Text style={styles.title}>Clinic Case Tracker</Text>
-                    <CaseList caseData={mockData} onCaseSelect={setSelectedCase} />
+                    <CaseList caseData={caseData} onCaseSelect={setSelectedCase} />
+                    <Button title="Add New Case" onPress={() => setAddingCase(true)} />
                 </>
-            ) : (
+            )}
+            {selectedCase && !addingCase && (
                 <CaseDetail case={selectedCase} onBack={() => setSelectedCase(null)} />
+            )}
+            {addingCase && (
+                <AddCaseForm onCancel={() => setAddingCase(false)} onSubmit={addNewCase} />
             )}
         </SafeAreaView>
     );
-}
+};
 
 const CaseList = ({ caseData, onCaseSelect }) => {
     const renderItem = ({ item }) => (
@@ -58,6 +70,58 @@ const CaseDetail = ({ case: selectedCase, onBack }) => {
             <Text style={styles.detailDescription}>{selectedCase.description}</Text>
             <Text style={styles.detailDetails}>{selectedCase.details}</Text>
             <Button title="Back to Overview" onPress={onBack} />
+        </View>
+    );
+};
+
+const AddCaseForm = ({ onCancel, onSubmit }) => {
+    const [caseNumber, setCaseNumber] = useState('');
+    const [status, setStatus] = useState('');
+    const [description, setDescription] = useState('');
+    const [details, setDetails] = useState('');
+
+    const handleSubmit = () => {
+        const newCase = {
+            id: Math.random().toString(36).substr(2, 9),
+            caseNumber,
+            status,
+            description,
+            details,
+        };
+        onSubmit(newCase);
+    };
+
+    return (
+        <View style={styles.formContainer}>
+            <Text style={styles.formTitle}>Add New Case</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Case Number"
+                value={caseNumber}
+                onChangeText={setCaseNumber}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Status"
+                value={status}
+                onChangeText={setStatus}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Description"
+                value={description}
+                onChangeText={setDescription}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Details"
+                value={details}
+                onChangeText={setDetails}
+            />
+            <View style={styles.buttonContainer}>
+                <Button title="Cancel" onPress={onCancel} />
+                <Button title="Submit" onPress={handleSubmit} />
+            </View>
         </View>
     );
 };
@@ -131,6 +195,35 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#777',
         marginBottom: 20,
+    },
+    formContainer: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        padding: 20,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
+    },
+    formTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    input: {
+        height: 40,
+        borderColor: '#CCCCCC',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
     },
 });
 
